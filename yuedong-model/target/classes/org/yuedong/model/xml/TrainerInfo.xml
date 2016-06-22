@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.TrainerInfoDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		school_name schoolName,
+		experience experience,
+		honors honors,
+		trainer_code trainerCode,
+		create_time createTime,
+		modify_time modifyTime,
+		deleted deleted,
+		persion_sign persionSign,
+		trainer_name trainerName,
+		img_url imgUrl,
+		sex sex,
+		teach_exps teachExps
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="schoolName != null and schoolName !='' ">
+				AND school_name = #{schoolName,jdbcType=VARCHAR}
+			</if>
+			<if test="experience != null and experience != 0 ">
+				AND experience = #{experience,jdbcType=INTEGER}
+			</if>
+			<if test="honors != null and honors !='' ">
+				AND honors = #{honors,jdbcType=VARCHAR}
+			</if>
+			<if test="trainerCode != null and trainerCode !='' ">
+				AND trainer_code = #{trainerCode,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="persionSign != null and persionSign !='' ">
+				AND persion_sign = #{persionSign,jdbcType=VARCHAR}
+			</if>
+			<if test="trainerName != null and trainerName !='' ">
+				AND trainer_name = #{trainerName,jdbcType=VARCHAR}
+			</if>
+			<if test="imgUrl != null and imgUrl !='' ">
+				AND img_url = #{imgUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null and sex !='' ">
+				AND sex = #{sex,jdbcType=VARCHAR}
+			</if>
+			<if test="teachExps != null and teachExps !='' ">
+				AND teachExps = #{teachExps,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.TrainerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_trainer_info
+		WHERE trainer_code = #{trainerCode,jdbcType=VARCHAR}
+		AND DELETED =
+		'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.TrainerInfo">
+		INSERT INTO t_trainer_info(
+		id,
+		school_name,
+		experience,
+		honors,
+		trainer_code,
+		create_time,
+		modify_time,
+		deleted,
+		persion_sign,
+		trainer_name,
+		img_url,
+		sex,
+		teach_exps
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{schoolName,jdbcType=VARCHAR},
+		#{experience,jdbcType=INTEGER},
+		#{honors,jdbcType=VARCHAR},
+		#{trainerCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{deleted,jdbcType=VARCHAR},
+		#{persionSign,jdbcType=VARCHAR},
+		#{trainerName,jdbcType=VARCHAR},
+		#{imgUrl,jdbcType=VARCHAR},
+		#{sex},
+		#{teachExps,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.TrainerInfo">
+		UPDATE t_trainer_info
+		set
+		<if test="schoolName != null and schoolName !=''   ">
+			school_name = #{schoolName,jdbcType=VARCHAR} ,
+		</if>
+		<if test="experience != null and experience != 0 ">
+			experience = #{experience,jdbcType=INTEGER} ,
+		</if>
+		<if test="honors != null and honors !=''   ">
+			honors = #{honors,jdbcType=VARCHAR} ,
+		</if>
+		<if test="trainerCode != null and trainerCode !=''   ">
+			trainer_code = #{trainerCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		<if test="persionSign != null and persionSign !=''   ">
+			persion_sign = #{persionSign,jdbcType=VARCHAR} ,
+		</if>
+		<if test="trainerName != null and trainerName !=''   ">
+			trainer_name = #{trainerName,jdbcType=VARCHAR} ,
+		</if>
+		<if test="imgUrl != null and imgUrl !='' ">
+			img_url = #{imgUrl,jdbcType=VARCHAR},
+		</if>
+		<if test="sex != null and sex !='' ">
+			sex = #{sex,jdbcType=VARCHAR},
+		</if>
+		<if test="teachExps != null and teachExps !='' ">
+			teachExps = #{teachExps,jdbcType=VARCHAR},
+		</if>
+		trainer_code = #{trainerCode,jdbcType=VARCHAR} 
+		WHERE trainer_code = #{trainerCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from
+		t_trainer_info
+		WHERE trainer_code = #{trainerCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.TrainerInfo"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_trainer_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.TrainerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_trainer_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="page" parameterType="java.util.Map" resultType="org.yuedong.model.TrainerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_trainer_info
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="schoolName != null and schoolName !='' ">
+			AND school_name = #{schoolName,jdbcType=VARCHAR}
+		</if>
+		<if test="experience != null and experience != 0 ">
+			AND experience = #{experience,jdbcType=INTEGER}
+		</if>
+		<if test="honors != null and honors !='' ">
+			AND honors = #{honors,jdbcType=VARCHAR}
+		</if>
+		<if test="trainerCode != null and trainerCode !='' ">
+			AND trainer_code = #{trainerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="persionSign != null and persionSign !='' ">
+			AND persion_sign = #{persionSign,jdbcType=VARCHAR}
+		</if>
+		<if test="trainerName != null and trainerName !='' ">
+			AND trainer_name = #{trainerName,jdbcType=VARCHAR}
+		</if>
+		<if test="imgUrl != null and imgUrl !='' ">
+			AND img_url = #{imgUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="sex != null and sex !='' ">
+			AND sex = #{sex,jdbcType=VARCHAR}
+		</if>
+		<if test="teachExps != null and teachExps !='' ">
+			AND teachExps = #{teachExps,jdbcType=VARCHAR}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

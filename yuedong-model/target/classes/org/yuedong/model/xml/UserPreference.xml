@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.UserPreferenceDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		preference_code preferenceCode,
+		user_code userCode,
+		prefernece_type_code preferneceTypeCode,
+		create_time createTime,
+		modify_time modifyTime,
+		deleted deleted
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="preferenceCode != null and preferenceCode !='' ">
+				AND preference_code = #{preferenceCode,jdbcType=VARCHAR}
+			</if>
+			<if test="userCode != null and userCode !='' ">
+				AND user_code = #{userCode,jdbcType=VARCHAR}
+			</if>
+			<if test="preferneceTypeCode != null and preferneceTypeCode !='' ">
+				AND prefernece_type_code =
+				#{preferneceTypeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.UserPreference">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_preference
+		WHERE preference_code =
+		#{preferenceCode,jdbcType=VARCHAR}
+		AND DELETED
+		= 'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.UserPreference">
+		INSERT INTO t_user_preference(
+		id,
+		preference_code,
+		user_code,
+		prefernece_type_code,
+		create_time,
+		modify_time,
+		deleted
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{preferenceCode,jdbcType=VARCHAR},
+		#{userCode,jdbcType=VARCHAR},
+		#{preferneceTypeCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{deleted,jdbcType=VARCHAR}
+
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.UserPreference">
+		UPDATE t_user_preference
+		set
+		<if test="preferenceCode != null and preferenceCode !=''   ">
+			preference_code = #{preferenceCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="userCode != null and userCode !=''   ">
+			user_code = #{userCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="preferneceTypeCode != null and preferneceTypeCode !=''   ">
+			prefernece_type_code =
+			#{preferneceTypeCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		preference_code = #{preferenceCode,jdbcType=VARCHAR} WHERE
+		preference_code = #{preferenceCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from
+		t_user_preference
+		WHERE preference_code =
+		#{preferenceCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.UserPreference"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_user_preference
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.UserPreference">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_preference
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="page" parameterType="java.util.Map"
+		resultType="org.yuedong.model.UserPreference">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_preference
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="preferenceCode != null and preferenceCode !='' ">
+			AND preference_code = #{preferenceCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null and userCode !='' ">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="preferneceTypeCode != null and preferneceTypeCode !='' ">
+			AND prefernece_type_code =
+			#{preferneceTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

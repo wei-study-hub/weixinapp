@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main/java/org/yuedong/action=UTF-8
+encoding//src/main/java/org/yuedong/action/ActivityInfoAction.java=gbk
+encoding//src/main/java/org/yuedong/action/BaseAction.java=gbk
+encoding//src/main/java/org/yuedong/action/CouponInfoAction.java=gbk
+encoding//src/main/java/org/yuedong/action/CourseInfoAction.java=UTF-8
+encoding//src/main/java/org/yuedong/action/CourseSearchAction.java=gbk
+encoding//src/main/java/org/yuedong/action/NoticeInfoAction.java=gbk
+encoding//src/main/java/org/yuedong/action/OrderInfoAction.java=UTF-8
+encoding//src/main/java/org/yuedong/action/StudentInfoAction.java=UTF-8
+encoding//src/main/java/org/yuedong/action/TrainerInfoAction.java=gbk
+encoding//src/main/java/org/yuedong/action/UserCollectionAction.java=gbk
+encoding//src/main/java/org/yuedong/action/UserInfoAction.java=gbk
+encoding//src/main/java/org/yuedong/action/UserSuggestionAction.java=gbk
+encoding//src/main/webapp/error/error_404.jsp=UTF-8

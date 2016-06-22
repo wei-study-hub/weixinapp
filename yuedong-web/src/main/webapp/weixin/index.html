@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content="侯沿萍" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<title>跃动客</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+			<link rel="stylesheet" href="css/weui.css" />
+</head>
+<body class="main">
+	<div class="kePublic">
+		<div class="slider" id="adver">
+		</div>
+	</div>
+	<div class="activity">
+
+	</div>
+	
+	
+    <div id="spinner">
+        正在加载
+    </div>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/yxMobileSlider.js"></script>
+	
+	<script  type="text/javascript">  
+	  $(".slider").yxMobileSlider({
+			width : 640,
+			height : 320,
+			during : 3000
+		})
+	  var index = 1;
+      function lowEnough(){
+          var pageHeight = Math.max(document.body.scrollHeight,document.body.offsetHeight);
+          var viewportHeight = window.innerHeight || 
+              document.documentElement.clientHeight ||
+              document.body.clientHeight || 0;
+          var scrollHeight = window.pageYOffset ||
+              document.documentElement.scrollTop ||
+              document.body.scrollTop || 0;
+          // console.log(pageHeight);
+          // console.log(viewportHeight);
+          // console.log(scrollHeight);
+          return pageHeight - viewportHeight - scrollHeight < 20;
+      }
+
+      function doSomething(){
+         $.ajax({
+				url : "/yuedong-weixin/eCourse/client/1/indexPage", // 提交的页面  
+				data : {
+					"index" : index
+				},
+				method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+				dataType : 'json',
+				error : function() { // 设置表单提交出错  
+					alert("执行出错");
+				},
+				success : function(result) {
+				var line = "";
+				for(var i = 0;i< result.data['bannerList'].length;i++){
+			    	line += '<ul><li><a href="order.html?adCode='+result.data['bannerList'][i]['activityCode']+'"> <img '+
+					'src="'+result.data['bannerList'][i]['imgUrl']+'" ></a></li></ul>';
+				  
+			   }
+			   $("#adver").append(line); 
+				var aList = "";
+				var eCourseList = result.data['eCourseList'];
+				for(var j = 0;j<eCourseList.length;j++){
+					   var imgUrl ="";
+					   if(eCourseList[j]['imgUrl'].indexOf(';')!=-1){
+							var imgUrls = eCourseList[j]['imgUrl'].split(";");
+							imgUrl = imgUrls[0];
+						}else{
+							imgUrl = eCourseList[j]['imgUrl'];
+						
+						}
+				       aList+='<div class="content"><div class="wrap"><div class="imgactive">'+
+			           '<a href="order.html?adCode='+eCourseList[j]['courseCode']+'"> <img src="'+imgUrl+'"></a></div><div class="bottomtext"><h3>'+
+			           eCourseList[j]['courseName']+'</h3>';
+			       //<div class="progressbar"><div class="bar fl"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="28" style="width: 50%;"> </div></div></div></div>
+			   
+			       /*  if(eCourseList[j]['status']=='00'){
+			        	   aList+='进行中';
+			           }else if(eCourseList[j]['status']=='01'){
+			        	   aList+='人数已满';
+			           }else{
+			        	   aList+='活动结束';
+			           }*/			    
+			          aList+='<span class="bianqian1">'+
+                         eCourseList[j]['courseTypeName']+'</span><span class="lcen" id="lcen">'+
+			            '</span><div class="money fr">'+
+			            '免费'+'</div><div class="clear"></div></div></div></div>';
+				}
+				$('.activity').append(aList);	
+			  },
+				cache : false
+			});
+          index++;
+          pollScroll();//继续循环
+          $('#spinner').hide();
+      }
+
+      function checkScroll(){
+          if(!lowEnough()) return pollScroll();
+          $('#spinner').show();
+          setTimeout(doSomething,900);
+      }
+      function pollScroll(){
+          setTimeout(checkScroll,1000);
+      }
+      checkScroll();
+    
+  </script>
+
+	<script type="text/javascript">
+
+		
+		/* $(function() {
+			$.ajax({
+				url : "/yuedong-weixin/eCourse/client/1/indexPage", // 提交的页面  
+				data : {
+					"index" : '1'
+				},
+				method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+				dataType : 'json',
+				error : function() { // 设置表单提交出错  
+					alert("执行出错");
+				},
+				success : function(result) {
+					var line = "";
+					for(var i = 0;i< result.data['bannerList'].length;i++){
+				    	line += '<ul><li><a href="order.html?adCode='+result.data['bannerList'][i]['activityCode']+'"> <img '+
+						'src="'+result.data['bannerList'][i]['imgUrl']+'" ></a></li></ul>';
+					  
+					}
+					
+					$("#adver").append(line);
+					
+				/* 	var aList = "";
+					var activityList = result.data['activityList'];
+					for(var j = 0;j<activityList.length;j++){
+						   var imgUrl ="";
+						   if(activityList[j]['imgUrl'].indexOf(';')!=-1){
+								var imgUrls = activityList[j]['imgUrl'].split(";");
+								imgUrl = imgUrls[0];
+							}else{
+								imgUrl = activityList[j]['imgUrl'];
+								
+							}
+					       aList+='<div class="content"><div class="wrap"><div class="imgactive">'+
+				           '<a href="order.html?adCode='+activityList[j]['activityCode']+'"> <img src="'+imgUrl+'"></a></div><div class="bottomtext"><h3>'+
+				           activityList[j]['activityName']+'</h3><div class="progressbar"><div class="bar fl"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="28" style="width: 50%;">';
+				           if(activityList[j]['status']=='00'){
+				        	   aList+='进行中';
+				           }else if(activityList[j]['status']=='01'){
+				        	   aList+='人数已满';
+				           }else{
+				        	   aList+='活动结束';
+				           }
+				           aList+='</div> <span class="lcen" id="lcen">'+
+				           activityList[j]['joinNum']+'/'+activityList[j]['maxJoinNum']+'</span></div></div><div class="money fr">¥'+
+				           activityList[j]['price']/100+'</div><div class="clear"></div></div></div></div></div>';
+							
+						
+					}
+					$('.activity').append(aList);	 */
+				/*	var aList = "";
+					var eCourseList = result.data['eCourseList'];
+					for(var j = 0;j<eCourseList.length;j++){
+						   var imgUrl ="";
+						   if(eCourseList[j]['imgUrl'].indexOf(';')!=-1){
+								var imgUrls = eCourseList[j]['imgUrl'].split(";");
+								imgUrl = imgUrls[0];
+							}else{
+								imgUrl = eCourseList[j]['imgUrl'];
+								
+							}
+					       aList+='<div class="content"><div class="wrap"><div class="imgactive">'+
+				           '<a href="order.html?adCode='+eCourseList[j]['courseCode']+'"> <img src="'+imgUrl+'"></a></div><div class="bottomtext"><h3>'+
+				           eCourseList[j]['courseName']+'</h3><div class="progressbar"><div class="bar fl"><div class="progress"><div class="progress-bar" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="28" style="width: 50%;">';
+				           if(eCourseList[j]['status']=='00'){
+				        	   aList+='进行中';
+				           }else if(eCourseList[j]['status']=='01'){
+				        	   aList+='人数已满';
+				           }else{
+				        	   aList+='活动结束';
+				           }
+				           aList+='</div> <span class="lcen" id="lcen">'+
+				            '</span></div></div><div class="money fr">'+
+				            '免费'+'</div><div class="clear"></div></div></div></div></div>';
+					}
+					$('.activity').append(aList);	
+				  },
+					cache : false
+				});
+			
+		}) */
+	</script>
+</body>
+</html>

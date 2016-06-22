@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.UserLoginInfoDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		login_type loginType,
+		account_no accountNo,
+		token token,
+		user_code userCode,
+		create_time createTime,
+		modify_time modifyTime,
+		deleted deleted
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="loginType != null and loginType !='' ">
+				AND login_type = #{loginType,jdbcType=VARCHAR}
+			</if>
+			<if test="accountNo != null and accountNo !='' ">
+				AND account_no = #{accountNo,jdbcType=VARCHAR}
+			</if>
+			<if test="token != null and token !='' ">
+				AND token = #{token,jdbcType=VARCHAR}
+			</if>
+			<if test="userCode != null and userCode !='' ">
+				AND user_code = #{userCode,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.UserLoginInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_login_info
+		WHERE user_code = #{userCode,jdbcType=VARCHAR}
+		AND DELETED
+		= 'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.UserLoginInfo">
+		INSERT INTO t_user_login_info(
+		id,
+		login_type,
+		account_no,
+		token,
+		user_code,
+		create_time,
+		modify_time,
+		deleted
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{loginType,jdbcType=VARCHAR},
+		#{accountNo,jdbcType=VARCHAR},
+		#{token,jdbcType=VARCHAR},
+		#{userCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{deleted,jdbcType=VARCHAR}
+
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.UserLoginInfo">
+		UPDATE t_user_login_info
+		set
+		<if test="loginType != null and loginType !=''   ">
+			login_type = #{loginType,jdbcType=VARCHAR} ,
+		</if>
+		<if test="accountNo != null and accountNo !=''   ">
+			account_no = #{accountNo,jdbcType=VARCHAR} ,
+		</if>
+		<if test="token != null and token !=''   ">
+			token = #{token,jdbcType=VARCHAR} ,
+		</if>
+		<if test="userCode != null and userCode !=''   ">
+			user_code = #{userCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		user_code = #{userCode,jdbcType=VARCHAR} WHERE user_code = #{userCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from
+		t_user_login_info
+		WHERE user_code = #{userCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.UserLoginInfo"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_user_login_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.UserLoginInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_login_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="page" parameterType="java.util.Map"
+		resultType="org.yuedong.model.UserLoginInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_user_login_info
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="loginType != null and loginType !='' ">
+			AND login_type = #{loginType,jdbcType=VARCHAR}
+		</if>
+		<if test="accountNo != null and accountNo !='' ">
+			AND account_no = #{accountNo,jdbcType=VARCHAR}
+		</if>
+		<if test="token != null and token !='' ">
+			AND token = #{token,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null and userCode !='' ">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

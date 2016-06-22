@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.ManagerInfoDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		manager_code managerCode,
+		manager_name managerName,
+		remarks remarks,
+		deleted deleted,
+		create_time createTime,
+		modify_time modifyTime,
+		password password
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="managerCode != null and managerCode !='' ">
+				AND manager_code = #{managerCode,jdbcType=VARCHAR}
+			</if>
+			<if test="managerName != null and managerName !='' ">
+				AND manager_name = #{managerName,jdbcType=VARCHAR}
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				AND remarks = #{remarks,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="password != null and password !='' ">
+				AND password = #{password,jdbcType=VARCHAR}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.ManagerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_manager_info
+		WHERE manager_code = #{managerCode,jdbcType=VARCHAR}
+		AND DELETED =
+		'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.ManagerInfo">
+		INSERT INTO t_manager_info(
+		id,
+		manager_code,
+		manager_name,
+		remarks,
+		deleted,
+		create_time,
+		modify_time,
+		password
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{managerCode,jdbcType=VARCHAR},
+		#{managerName,jdbcType=VARCHAR},
+		#{remarks,jdbcType=VARCHAR},
+		#{deleted,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{password,jdbcType=VARCHAR}
+
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.ManagerInfo">
+		UPDATE t_manager_info
+		set
+		<if test="managerCode != null and managerCode !=''   ">
+			manager_code = #{managerCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="managerName != null and managerName !=''   ">
+			manager_name = #{managerName,jdbcType=VARCHAR} ,
+		</if>
+		<if test="remarks != null and remarks !=''   ">
+			remarks = #{remarks,jdbcType=VARCHAR} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="password != null and password !=''   ">
+			password = #{password,jdbcType=VARCHAR} ,
+		</if>
+		manager_code = #{managerCode,jdbcType=VARCHAR}
+		 WHERE manager_code = #{managerCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from
+		t_manager_info
+		WHERE manager_code = #{managerCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.ManagerInfo"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_manager_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.ManagerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_manager_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="page" parameterType="java.util.Map" resultType="org.yuedong.model.ManagerInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_manager_info
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="managerCode != null and managerCode !='' ">
+			AND manager_code = #{managerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="managerName != null and managerName !='' ">
+			AND manager_name = #{managerName,jdbcType=VARCHAR}
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			AND remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="password != null and password !='' ">
+			AND password = #{password,jdbcType=VARCHAR}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

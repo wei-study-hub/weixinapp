@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.ImgInfoDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		img_code imgCode,
+		img_url imgUrl,
+		create_time createTime,
+		modify_time modifyTime,
+		deleted deleted,
+		token token,
+		namespace namespace
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="imgCode != null and imgCode !='' ">
+				AND img_code = #{imgCode,jdbcType=VARCHAR}
+			</if>
+			<if test="imgUrl != null and imgUrl !='' ">
+				AND img_url = #{imgUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="token != null and token !='' ">
+				AND token = #{token,jdbcType=VARCHAR}
+			</if>
+			<if test="namespace != null and namespace !='' ">
+				AND namespace = #{namespace,jdbcType=VARCHAR}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.ImgInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_img_info
+		WHERE img_code = #{imgCode,jdbcType=VARCHAR}
+		AND DELETED = 'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.ImgInfo">
+		INSERT INTO t_img_info(
+		id,
+		img_code,
+		img_url,
+		create_time,
+		modify_time,
+		deleted,
+		token,
+		namespace
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{imgCode,jdbcType=VARCHAR},
+		#{imgUrl,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{deleted,jdbcType=VARCHAR},
+		#{token,jdbcType=VARCHAR},
+		#{namespace,jdbcType=VARCHAR}
+
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.ImgInfo">
+		UPDATE t_img_info
+		set
+		<if test="imgCode != null and imgCode !=''   ">
+			img_code = #{imgCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="imgUrl != null and imgUrl !=''   ">
+			img_url = #{imgUrl,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		<if test="token != null and token !=''   ">
+			token = #{token,jdbcType=VARCHAR} ,
+		</if>
+		<if test="namespace != null and namespace !=''   ">
+			namespace = #{namespace,jdbcType=VARCHAR} ,
+		</if>
+		img_code = #{imgCode,jdbcType=VARCHAR}
+		 WHERE img_code = #{imgCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from t_img_info
+		WHERE img_code = #{imgCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.ImgInfo"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_img_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.ImgInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_img_info
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="page" parameterType="java.util.Map" resultType="org.yuedong.model.ImgInfo">
+		SELECT
+		<include refid="all_column" />
+		FROM t_img_info
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="imgCode != null and imgCode !='' ">
+			AND img_code = #{imgCode,jdbcType=VARCHAR}
+		</if>
+		<if test="imgUrl != null and imgUrl !='' ">
+			AND img_url = #{imgUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="height != null and height != 0 ">
+			AND height = #{height,jdbcType=INTEGER}
+		</if>
+		<if test="width != null and width != 0 ">
+			AND width = #{width,jdbcType=INTEGER}
+		</if>
+		<if test="token != null and token !='' ">
+			AND token = #{token,jdbcType=VARCHAR}
+		</if>
+		<if test="namespace != null and namespace !='' ">
+			AND namespace = #{namespace,jdbcType=VARCHAR}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

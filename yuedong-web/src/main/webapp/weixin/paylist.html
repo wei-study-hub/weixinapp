@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+	<title>课程详情</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" href="css/weui.css"/>
+</head>
+<body>
+<input type="hidden" id="userCode" name="userCode"></input>
+<div id="cList">
+
+
+
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+//点击选中状态
+/* function lacationed(price,couponCode){
+	
+	$.ajax({
+		url : "/yuedong-weixin/coupon/client/1/saveCoupon", // 优惠劵列表
+		data : {
+		    "couponCode":couponCode,
+            "price":price
+		},
+		method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+		
+		error : function() { // 设置表单提交出错  
+			alert("执行出错");
+		},
+		success : function(result) {
+			
+		},
+		cache : false
+	}); 
+	
+	window.history.back(); 
+}
+
+ 
+ $(document).on('click','.rightt',function(e){
+		if ($(this).children('.keuser').hasClass('bg2')) {
+	 		 e.stopPropagation(); 
+	 	} else {
+	 		$(this).children('.redimg').addClass('bg01').removeClass('bg02').parents().siblings('.center').children('.rightb').find('.redimg').removeClass('bg01').addClass('bg02');
+	 		var couponCode =  $(this).children('.couponCode').val();
+	 		//获取点击对象的父类的同级的子级的值
+	 		var price = $(this).parent('.rightb').prev().children(".rf36").html();
+	 		 setTimeout('lacationed('+price+','+couponCode+')',500);
+	 	}
+}) */
+
+ $(function(){
+		var strUrl = window.location.href;
+		var indexof = strUrl.indexOf("?");
+		var price = null;
+		var scopeTypeCode = null;
+		if (indexof != -1) {
+			if (strUrl.indexOf('&') != -1) {
+				var s = strUrl.substr(strUrl.indexOf("?") + 1,
+						strUrl.length)
+				var str = s.split('&');
+				for (var i = 0; i < str.length; i++) {
+					if (str[i].indexOf("userCode") != -1) {
+						strUrl = str[i].substr(str[i].indexOf("=") + 1,
+								str[i].length);
+					}
+				}
+			} else {
+				strUrl = strUrl.substr(strUrl.indexOf("=") + 1,
+						strUrl.length);
+			}
+		} else {
+			strUrl = null;
+		}
+		if (null != strUrl) {
+				$('#userCode').val(strUrl);
+				$.ajax({
+					url : "/yuedong-weixin/coupon/client/1/list", // 我的优惠劵列表
+					data : {
+						"userCode":$('#userCode').val(),
+	                  
+	                    "index":"1"
+					},
+					method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+					dataType : 'json',
+					error : function() { // 设置表单提交出错  
+						alert("执行出错");
+					},
+					success : function(result) {
+						if(result.resultCode=='00')
+                        {  
+						   var couponModels = result.data['couponModels'];
+						 
+						  for(var i=0;i<couponModels.length;i++){
+					    	 var line = '<div class="center mt10"><div class="leftx"><span class="rf36">'+
+					    	 couponModels[i]['discount']+'</span><span class="rf18">元</span></div><div class="rightb"><div class="leftl"><span class="g18">'+
+					    	 couponModels[i]['couponName']+'</span><span class="g12">有效期至'+ 
+					    	 couponModels[i]['deadline']+'</span><span class="g12">'+   
+					    	 couponModels[i]['conditions']+'</span></div><div class="rightt"><span class="redimg bg02"></span><input type="hidden" class="couponCode"  name="couponCode" value="'+
+					    	 couponModels[i]['couponCode']+'"></input>';
+					    	 if(couponModels[i]['status']=="00"){
+					    		 line+='<span class="keuser bg1">';
+					    	 }else{
+					    		 line+= '<span class="keuser bg2">';
+					    	 }
+					    	 line+='</span></div><div class="clear"></div></div><div class="clear"></div></div>';
+					    	 $('#cList').append(line);	 
+						  }
+						}else
+						{
+							alert("系统异常");
+						}
+					},
+					cache : false
+				});
+			}
+	})
+</script>
+</body>
+</html>

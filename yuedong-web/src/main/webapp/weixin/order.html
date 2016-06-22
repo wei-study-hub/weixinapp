@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+	<title>活动详情</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" href="css/weui.css"/>
+</head>
+<body>
+<div class="banner">
+	<img src="" id="banner">
+	<span class="bottombox">
+		<h3 class="fn18" id="activityName"></h3>
+		<!-- <span class="rnumb">28</span> -->
+	</span>
+</div>
+	<input type="hidden" id="userCode"></input>
+		<input type="hidden" id="activityCode"></input>
+<div class="content pdt0">
+	<div class="wf pd15"> 
+		<div class="left fl t0">
+			<!-- <span class="money db" id="price"></span> -->
+			<span class="bianqian2" id="price"></span>
+			<span class="bianqian1" id="courseTypeName"></span>
+			<!-- <div class="progress">
+			  <div class="progress-bar" role="progressbar" id="status" aria-valuenow="14" aria-valuemin="0" aria-valuemax="28" style="width:50%;">报名中
+			  </div>
+			  <span class="lcen" id='lcen'></span>
+			</div> -->
+		</div>
+		<div class="right fl">
+			<img src="img/ic_active_correct.png">
+			<span class="text">收藏</span>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="content pdt0">
+	<div class="wf">
+		<div class="w90 h48">
+			<span class="lefttitlt" >活动地点</span>	
+			<span class="rightinfo" id="address"></span>
+			<div class="clear"></div>
+		</div>
+		<!-- <div class="w90">
+			<span class="lefttitlt">上课时间</span>	
+			<span class="rightinfo" id="classTime"></span>
+			
+			<div class="clear"></div>
+		</div> -->
+		<!-- <div class="w90 nob h48">
+			<span class="lefttitlt">联系电话</span>	
+			<span class="rightinfo" id="telephone"></span>
+			<div class="clear"></div>
+		</div> -->
+	</div>
+</div>
+<div class="content mb40">
+	<div class="wf">
+		<div class="w90 nob">
+			<span class="lefttitlt">课程时间</span>
+			<span id="content"></span>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<!-- <div class="content mb40 caoche pdt0">
+	<div class="wf">
+		<div class="w90 h48">
+			<span class="lefttitlt">教练</span>
+			<div class="clear"></div>
+		</div>
+		<div class="w90 nob">
+			<span class="leftimg">
+				<img src="img/ic_index_sort_04.png" width="45" height="45">
+			</span>
+			<div class="rt fl">
+				<span class="named">丫头</span>
+				<span class="ninfo"></span>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div> -->
+<div class="pf">
+	<a class="btn-infox"  id="apply">立即报名</a>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	function laction(){
+		window.location ="caoch.html";
+	}
+	$('.caoche').click(function(){                     
+		laction();
+	})               
+	$('#apply').click(function(){
+		window.location.href = 'orderpay.html?activityCode='+$('#activityCode').val();
+		
+	})  
+	$(function() {
+			var strUrl = window.location.href;
+			var indexof = strUrl.indexOf("?");
+			if (indexof != -1) {
+				if (strUrl.indexOf('&') != -1) {
+					var s = strUrl.substr(strUrl.indexOf("?") + 1,
+							strUrl.length)
+					var str = s.split('&');
+					for (var i = 0; i < str.length; i++) {
+						if (str[i].indexOf("adCode") != -1) {
+							strUrl = str[i].substr(str[i].indexOf("=") + 1,
+									str[i].length);
+							break;
+						}
+					}
+				} else {
+					strUrl = strUrl.substr(strUrl.indexOf("=") + 1,
+							strUrl.length);
+				}
+			} else {
+				strUrl = null;
+			}
+			/* 
+			if (null != strUrl) {
+				$.ajax({
+					url : "/yuedong-weixin/activity/client/1/detail", // 提交的页面  
+					data : {
+						"activityCode" : strUrl,
+					},
+					method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+					dataType : 'json',
+					error : function() { // 设置表单提交出错  
+						alert("执行出错");
+					},
+					success : function(result) {
+						if(result.resultCode=='00')
+						{   
+							if(result.data['imgUrl'].indexOf(';')!=-1){
+								var imgUrls = result.data['imgUrl'].split(";");
+								$("#banner").attr('src',imgUrls[0]);
+							}else{
+								$("#banner").attr('src',result.data['imgUrl']);
+							}
+							
+							
+							$('#activityName').html(result.data['activityName']);
+							$('#price').html("¥"+result.data['price']/100);
+							if(result.data['status']=='00'){
+								$('#status').html('报名中');
+							}else if(result.data['status']=='01'){
+								$('#status').html('报名截止');
+							}else{
+								$('#status').html('报名截止');
+							}
+						    $('#lcen').html(result.data['joinNum']+'/'+result.data['maxJoinNum']);  
+						    $('#address').html(result.data['address']);           
+						    $('#classTime').html(result.data['beginTime']+'-'+result.data['endTime']);  
+						    $('#content').html(result.data['content']);      
+						    $('#telephone').html(result.data['telephone']);  
+						    $('#activityCode').val(result.data['activityCode']);  
+						  
+						
+						}else
+						{
+							alert("服务器异常");
+						}
+					},
+					cache : false
+				});
+			} */
+			
+			if (null != strUrl) {
+				$.ajax({
+					url : "/yuedong-weixin/eCourse/client/1/detail", // 提交的页面  
+					data : {
+						"eCourseCode" : strUrl,
+					},
+					method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+					dataType : 'json',
+					error : function() { // 设置表单提交出错  
+						alert("执行出错");
+					},
+					success : function(result) {
+						if(result.resultCode=='00')
+						{   
+							if(result.data['imgUrl'].indexOf(';')!=-1){
+								var imgUrls = result.data['imgUrl'].split(";");
+								$("#banner").attr('src',imgUrls[0]);
+							}else{
+								$("#banner").attr('src',result.data['imgUrl']);
+							}
+							$('#activityName').html(result.data['courseName']);
+							$('#price').html("免费");
+							$('#courseTypeName').html(result.data['courseTypeName']);
+							if(result.data['status']=='00'){
+								$('#status').html('报名中');
+							}else if(result.data['status']=='01'){
+								$('#status').html('报名截止');
+							}else{
+								$('#status').html('报名截止');
+							}
+						    $('#lcen').html(result.data['joinNum']+'/'+result.data['maxJoinNum']);  
+						    $('#address').html(result.data['address']);           
+						   /*  $('#classTime').html(result.data['beginTime']+'-'+result.data['endTime']);   
+						         */
+						//  $('#telephone').html(result.data['telephone']);  
+						    $('#activityCode').val(result.data['courseCode']);
+						    var obj = eval( "(" + result.data['courseTimeDetail'] + ")" );		
+						    var strTime = "周二  "+obj['周二'][0]+" "+obj['周二'][1]+" "+
+									      "周三  "+obj['周三'][0]+" "+obj['周三'][1]+" "+
+									      "周四  "+obj['周四'][0]+" "+obj['周四'][1]+" "+
+									      "周五  "+obj['周五'][0]+" "+obj['周五'][1]+" "+
+									      "周六  "+obj['周六'][0]+" "+obj['周六'][1]+" "+
+									      "周日  "+obj['周日'][0]+" "+obj['周日'][1]+" "+
+									      "周一  "+obj['周一'][0]+" "+obj['周一'][1]+" ";
+							$('#content').html(strTime); 
+						   
+						    
+						}else
+						{
+							alert("服务器异常");
+						}
+					},
+					cache : false
+				});
+			}
+		})
+</script>
+</body>
+</html>

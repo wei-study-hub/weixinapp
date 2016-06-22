@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+	<title>课程列表</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" href="css/weui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/select.css">
+</head>
+<body>
+	<div class="upimgt">
+		<div class="touimg blur" id="imgbtn">
+		</div>
+		<span class="imgborder">
+			<img src="img/ic_index_sort_04.png" id="img">
+		</span>
+		<span class="namebox" id="userName"></span>
+		
+	</div>
+	<input type="hidden" id="userCode"></input>
+	<div class="center">
+		<div>
+			<div class="leftico fl">
+				<img src="img/ic_index_active.png">
+			</div>
+			<div class="rightinfoed fl" >
+				 <span id="myClass"><a>我的课程</a></span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+			<div class="leftico fl">
+				<img src="img/ic_index_class.png">
+			</div>
+			<div class="rightinfoed fl">
+				 <span id="activMy"><a>我的活动</a></span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+			<div class="leftico fl">
+				<img src="img/ic_index_collection.png">
+			</div>
+			<div class="rightinfoed fl">
+				<span id="collection"><a>我的收藏</a></span>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+			<div class="leftico fl">
+				<img src="img/ic_index_coupon.png">
+			</div>
+			<div class="rightinfoed fl nob">
+				 <span id="paylist"><a>我的优惠券</a></span>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$('#imgbtn').css('background-image','url(img/ic_index_sort_04.png)');
+function lacationed(){
+		window.location ="resources.html?userCode="+$("#userCode").val();
+}
+	$('.imgborder').click(function(){
+		setTimeout('lacationed()',200);
+	})
+$(function(){	
+	$.ajax({
+		url : '/yuedong-weixin/user/get/session',
+		type : "POST",
+		success : function(data)
+		{   
+			if(null == data.userCode){
+				window.location.href = '/yuedong-weixin/weixin/logined.html';
+			}else{
+				$("#userCode").val(data.userCode);
+				getUserInfo();
+			}
+			 
+		}
+	});
+})	 
+function getUserInfo(){
+		  $.ajax({
+				url : "/yuedong-weixin/user/client/1/centerIndex", // 提交的页面  
+				data : {"userCode":$("#userCode").val()}, // 从表单中获取数据  
+				method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+				dataType : 'json',
+				error : function() { // 设置表单提交出错  
+					alert("执行出错");
+				},
+				success : function(result) {
+					if(result.data['imgUrl']!=null){
+						$("#img").attr("src",result.data['imgUrl']);
+					}
+					$("#userName").html(result.data['userName']);
+				},
+				cache : false
+			}); 
+	}
+$("#myClass").click(function(){
+	window.location.href = "activMy.html?userCode="+$("#userCode").val()+"&type=course";
+})
+$("#activMy").click(function(){
+	window.location.href = "activMy.html?userCode="+$("#userCode").val()+"&type=activity";
+})
+$("#collection").click(function(){
+	window.location.href = "collection.html?userCode="+$("#userCode").val();
+})
+$("#paylist").click(function(){
+	window.location.href = "paylist.html?userCode="+$("#userCode").val();
+})
+
+</script>
+</body>
+</html>

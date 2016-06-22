@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+	<title>课程列表</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" href="css/weui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/select.css">
+</head>
+<body>
+<input type="hidden" id="ares" value="" >
+<input type="hidden" id="courseType" value="" >
+<div class="select h48">
+	<div class="xz">
+	<span class="titlebox">
+		<input type="text" class="ydxm" value="全部" readonly>
+		<span class="cart"></span>
+	</span>
+		<div class="xx">
+			<ul class="yd">
+				<li value="8">全部</li>
+				<li value="9">中考培训</li>
+				<li value="0">篮球</li>
+				<li value="1" >足球</li>
+				<li value="2">游泳</li>
+				<li value="7">乒乓球</li>
+				<li value="3">跆拳道</li>
+				<li value="6">羽毛球</li>
+				<li value="5">潮运动</li>
+				<li value="4">棋类</li>
+				<li value="10">其他</li>
+			</ul>
+		</div>
+	</div>
+	<div class="xz">
+	<span class="titlebox">
+		<input type="text" class="ydxm" value="全部地区" readonly>
+		<span class="cart"></span>
+	</span>
+		<div class="xx">
+			<ul class="ym">
+				<li>全部地区</li>
+				<li value="330106">西湖区</li>
+				<li value="330110">余杭区</li>
+				<li value="330104">江干区</li>
+				<li value="330105">拱墅区</li>
+				<li value="330109">萧山区</li>
+				<li value="330108">滨江区</li>
+				<li value="330102">上城区</li>
+				<li value="330103">下城区</li>
+				<li value="330183">富阳区</li>
+				<li value="330109">萧山区</li>         
+				<li value="330122">桐庐县</li> 
+				<li value="330182">建德市</li> 
+			</ul>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="wbox">
+
+
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript">     
+    $('.xz').click(function(){
+		if ($(this).children('.xx').is(':hidden')) {
+			$(this).children('.xx').slideDown().parent().siblings().children('.xx').slideUp();
+			$(this).find('.cart').removeClass('cart').addClass('carted').parent().siblings().find('.carted').removeClass('carted').addClass('cart');
+		} else {
+			$(this).children('.xx').slideUp();
+			$(this).find('.carted').removeClass('carted').addClass('cart');
+		}
+		
+	})
+	$('.yd li').click(function(){
+		var ocllitext=$(this).text();
+	    $(this).parents('.xx').siblings('.titlebox').children('input').val(ocllitext);
+		$('#courseType').val($(this).val());
+		getCourseList($('#courseType').val(),$('#ares').val());
+	})
+	$('.ym li').click(function(){
+		var ocllitext=$(this).text();
+	    $(this).parents('.xx').siblings('.titlebox').children('input').val(ocllitext);
+	//	$('#ares').val($(this).val()); 
+		$('#ares').val(ocllitext);
+		getCourseList($('#courseType').val(),$('#ares').val());
+		
+	})
+	
+
+
+function lacationed(courseCode){
+    	
+	window.location ="courseInfo.html?courseCode="+courseCode;
+}
+$(document).on('click','.outbox',function(e){
+	
+	 setTimeout('lacationed(\"'+$(this).children('.courseCode').val()+'\")',500); 
+})
+	
+$(function() {
+	var strUrl = window.location.href;
+	var indexof = strUrl.indexOf("?");
+	if (indexof != -1) {
+		if (strUrl.indexOf('&') != -1) {
+			var s = strUrl.substr(strUrl.indexOf("?") + 1,
+					strUrl.length)
+			var str = s.split('&');
+			for (var i = 0; i < str.length; i++) {
+				if (str[i].indexOf("type") != -1) {
+					strUrl = str[i].substr(str[i].indexOf("=") + 1,
+							str[i].length);
+					break;
+				}        
+				
+			}
+		} else {
+			strUrl = strUrl.substr(strUrl.indexOf("=") + 1,
+					strUrl.length);
+		}
+	} else {
+		strUrl = null;
+	}
+	$('#courseType').val(strUrl);
+	getCourseList(strUrl,"");
+})
+
+function getCourseList(courseTypeCode,serviceAreasName){
+		$.ajax({
+			url : "/yuedong-weixin/course/client/1/courseFilter", // 提交的页面  
+			data:{
+				"index":1,
+				"courseTypeCode":courseTypeCode,
+				"serviceAreasName":serviceAreasName 
+			},
+			method : "POST", // 设置请求类型为"POST"，默认为"GET"  
+			dataType : 'json',
+			error : function() { // 设置表单提交出错  
+				alert("执行出错");
+			},
+			success : function(result) {
+				if(result.resultCode=='00')
+				{  
+				   var courseList = result.data['courseList'];
+				   $('.wbox').empty();
+				   var line = "";
+				   for(var i=0;i<courseList.length;i++){
+					   var imgUrl ="";
+					   if(courseList[i]['imgUrl'].indexOf(';')!=-1){
+							var imgUrls = courseList[i]['imgUrl'].split(";");
+							imgUrl = imgUrls[0];
+						}else{
+							imgUrl = courseList[i]['imgUrl'];
+							
+						}
+						
+					   line+='<div class="outbox"><input type="hidden" class="courseCode" value="'+courseList[i]['courseCode']+'" ><div class="innerbox"><div class="fl leftimgbox">'+
+							 '<img src="'+imgUrl+'" ></div><div class="fl frtextbox">'+
+							 '<h3>'+courseList[i]['courseName']+'</h3><span class="bianqian1">'+
+							 courseList[i]['courseTypeName']+'</span><span class="bianqian2">'+
+							 courseList[i]['serviceAreaName']+'</span><p>'+
+							 courseList[i]['address']+'</p><p class="btoom"><span class="time">'+
+							 courseList[i]['beginTime']+'-'+courseList[i]['endTime']+'</span><span class="money">¥'+
+							 courseList[i]['price']/100+'</span></p></div><div class="clear"></div></div></div>';
+			       /* private String courseType;//课程类型编码
+		            private String courseCode; */
+				   }
+					   $(".wbox").append(line);
+			    }else
+				{   
+					alert("系统异常");
+				}
+			},
+			cache : false
+		});
+	}
+</script>
+</body>
+</html>

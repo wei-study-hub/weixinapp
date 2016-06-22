@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yuedong.dao.impl.CouponTypeDaoImpl">
+
+	<sql id="all_column">
+		id id,
+		coupon_type_code couponTypeCode,
+		coupon_type_name
+		couponTypeName,
+		create_time createTime,
+		modify_time modifyTime,
+		deleted
+		deleted,
+		num num,
+		deadline deadline,
+		scope_type_code scopeTypeCode,
+		status status,
+		effect_date effectDate,
+		discount discount,
+		remind remind,
+		remarks remarks,
+		img_code imgCode,
+		consume_amount consumeAmount,
+		conditions conditions
+	</sql>
+
+	<sql id="where_caluse">
+		<where>
+			DELETED = 'F'
+			<if test="id != null and id != 0 ">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+			<if test="couponTypeCode != null and couponTypeCode !='' ">
+				AND coupon_type_code = #{couponTypeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="couponTypeName != null and couponTypeName !='' ">
+				AND coupon_type_name = #{couponTypeName,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null  ">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null  ">
+				AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="num != null and num != 0 ">
+				AND num = #{num,jdbcType=INTEGER}
+			</if>
+			<if test="deadline != null  ">
+				AND deadline = #{deadline,jdbcType=TIMESTAMP}
+			</if>
+			<if test="scopeTypeCode != null and scopeTypeCode !='' ">
+				AND scope_type_code = #{scopeTypeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status !='' ">
+				AND status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="effectDate != null  ">
+				AND effect_date = #{effectDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="discount != null and discount != 0 ">
+				AND discount = #{discount,jdbcType=INTEGER}
+			</if>
+			<if test="remind != null and remind != 0 ">
+				AND remind = #{remind,jdbcType=INTEGER}
+			</if>
+			<if test="remarks != null and remarks !='' ">
+				AND remarks = #{remarks,jdbcType=VARCHAR}
+			</if>
+			<if test="imgCode != null and imgCode !='' ">
+				AND img_code = #{imgCode,jdbcType=VARCHAR}
+			</if>
+			<if test="conditions != null and conditions !='' ">
+				AND conditions = #{conditions,jdbcType=VARCHAR}
+			</if>
+			<if test="consumeAmount != null and consumeAmount != 0 ">
+				AND consume_amount >= #{consumeAmount,jdbcType=INTEGER}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="findByCode" parameterType="String"
+		resultType="org.yuedong.model.CouponType">
+		SELECT
+		<include refid="all_column" />
+		FROM t_coupon_type
+		WHERE coupon_type_code =
+		#{couponTypeCode,jdbcType=VARCHAR}
+		AND DELETED =
+		'F'
+	</select>
+
+
+
+	<insert id="insert" parameterType="org.yuedong.model.CouponType">
+		INSERT INTO t_coupon_type(
+		id,
+		coupon_type_code,
+		coupon_type_name,
+		create_time,
+		modify_time,
+		deleted,
+		num,
+		deadline,
+		scope_type_code,
+		status,
+		effect_date,
+		discount,
+		remind,
+		remarks,
+		img_code,
+		consume_amount,
+		conditions
+		)
+		VALUES(
+		#{id,jdbcType=INTEGER},
+		#{couponTypeCode,jdbcType=VARCHAR},
+		#{couponTypeName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP},
+		#{deleted,jdbcType=VARCHAR},
+		#{num,jdbcType=INTEGER},
+		#{deadline,jdbcType=TIMESTAMP},
+		#{scopeTypeCode,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{effectDate,jdbcType=TIMESTAMP},
+		#{discount,jdbcType=INTEGER},
+		#{remind,jdbcType=INTEGER},
+		#{remarks,jdbcType=VARCHAR},
+		#{imgCode,jdbcType=VARCHAR},
+		#{consumeAmount,jdbcType=INTEGER},
+		#{conditions,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateByCode" parameterType="org.yuedong.model.CouponType">
+		UPDATE t_coupon_type
+		set
+		<if test="couponTypeCode != null and couponTypeCode !=''   ">
+			coupon_type_code = #{couponTypeCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="couponTypeName != null and couponTypeName !=''   ">
+			coupon_type_name = #{couponTypeName,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createTime != null  ">
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="modifyTime != null  ">
+			modify_time = #{modifyTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="deleted != null and deleted !=''   ">
+			deleted = #{deleted,jdbcType=VARCHAR} ,
+		</if>
+		<if test="num != null and num != 0 ">
+			num = #{num,jdbcType=INTEGER} ,
+		</if>
+		<if test="deadline != null  ">
+			deadline = #{deadline,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="scopeTypeCode != null and scopeTypeCode !=''   ">
+			scope_type_code = #{scopeTypeCode,jdbcType=VARCHAR} ,
+		</if>
+		<if test="status != null and status !=''   ">
+			status = #{status,jdbcType=VARCHAR} ,
+		</if>
+		<if test="effectDate != null  ">
+			effect_date = #{effectDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="discount != null and discount != 0 ">
+			discount = #{discount,jdbcType=INTEGER} ,
+		</if>
+		<if test="remind != null and remind != 0 ">
+			remind = #{remind,jdbcType=INTEGER} ,
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			remarks = #{remarks,jdbcType=VARCHAR},
+		</if>
+		<if test="imgCode != null and imgCode !='' ">
+			img_code = #{imgCode,jdbcType=VARCHAR},
+		</if>
+		<if test="conditions != null and conditions !='' ">
+			conditions = #{conditions,jdbcType=VARCHAR},
+		</if>
+		<if test="consumeAmount != null and consumeAmount != 0 ">
+			consume_amount = #{consumeAmount,jdbcType=INTEGER},
+		</if>
+		coupon_type_code = #{couponTypeCode,jdbcType=VARCHAR} WHERE
+		coupon_type_code = #{couponTypeCode,jdbcType=VARCHAR}
+	</update>
+
+
+	<!-- delete -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from
+		t_coupon_type
+		WHERE coupon_type_code =
+		#{couponTypeCode,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- pagination finding -->
+	<select id="count" parameterType="org.yuedong.model.CouponType"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_coupon_type
+		<include refid="where_caluse" />
+	</select>
+
+	<select id="findAll" resultType="org.yuedong.model.CouponType">
+		SELECT
+		<include refid="all_column" />
+		FROM t_coupon_type
+	</select>
+
+	<select id="page" parameterType="java.util.Map" resultType="org.yuedong.model.CouponType">
+		SELECT
+		<include refid="all_column" />
+		FROM t_coupon_type
+		WHERE
+		DELETED = 'F'
+		<if test="id != null and id != 0 ">
+			AND id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="couponTypeCode != null and couponTypeCode !='' ">
+			AND coupon_type_code = #{couponTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="couponTypeName != null and couponTypeName !='' ">
+			AND coupon_type_name = #{couponTypeName,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null  ">
+			AND create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="modifyTime != null  ">
+			AND modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="num != null and num != 0 ">
+			AND num = #{num,jdbcType=INTEGER}
+		</if>
+		<if test="deadline != null  ">
+			AND deadline = #{deadline,jdbcType=TIMESTAMP}
+		</if>
+		<if test="scopeTypeCode != null and scopeTypeCode !='' ">
+			AND scope_type_code = #{scopeTypeCode,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status !='' ">
+			AND status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="effectDate != null  ">
+			AND effect_date = #{effectDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="discount != null and discount != 0 ">
+			AND discount = #{discount,jdbcType=INTEGER}
+		</if>
+		<if test="remind != null and remind != 0 ">
+			AND remind = #{remind,jdbcType=INTEGER}
+		</if>
+		<if test="remarks != null and remarks !='' ">
+			AND remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="imgCode != null and imgCode !='' ">
+			AND img_code = #{imgCode,jdbcType=VARCHAR}
+		</if>
+		<if test="conditions != null and conditions !='' ">
+			AND conditions = #{conditions,jdbcType=VARCHAR}
+		</if>
+		<if test="consumeAmount != null and consumeAmount != 0 ">
+			AND consume_amount >= #{consumeAmount,jdbcType=INTEGER}
+		</if>
+		ORDER BY
+		<if test="orderBy != null">
+			${orderBy} ${sort}
+		</if>
+		<if test="orderBy == null or orderBy == '' ">
+			create_time ${sort}
+		</if>
+		LIMIT #{offset} , #{pageSize}
+	</select>
+</mapper> 

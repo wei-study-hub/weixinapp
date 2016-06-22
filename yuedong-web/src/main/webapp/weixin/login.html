@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>课程列表</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+			<link rel="stylesheet" href="css/weui.css" />
+			<link rel="stylesheet" type="text/css" href="css/select.css">
+</head>
+<body>
+	<form action="">
+		<div class="cent cenede">
+			<div class="logo">
+				<img src="img/logo1.png">
+			</div>
+			<div class="name">
+				<span class="leftname"> <img src="img/phone.png"></span> <span
+					class="rightinput nob"> <input type="text" class="nob"
+					id="telephone"  placeholder="请输入手机号" />
+				</span>
+				<div class="clear"></div>
+			</div>
+			<div class="name">
+				<span class="leftname"> <img src="img/suo.png"></span> <span
+					class="rightinput nob"> <input type="password" id="pass1" class="nob"
+					placeholder="请输入密码" />
+				</span>
+				<div class="clear"></div>
+			</div>
+			<div class="name">
+				<span class="leftname"> <img src="img/protect.png"></span> <span
+					class="rightinput nob"> <input type="password" id="pass2" class="nob"
+					placeholder="再次输入密码" />
+				</span>
+				<div class="clear"></div>
+			</div>
+			<div class="name nob">
+				<div class="borb">
+					<span class="leftname"> </span> <span class="rightinput nob">
+						<input type="text" class="nob" id="verifyCode" placeholder="请输入验证码" />
+					</span>
+					<div class="clear"></div>
+				</div>
+				<input class="code" type="button" id="btn" value="获取验证码" />
+			</div>
+			<div class="tijiao mt25">
+				<button type="button" id="regist">提交并注册</button>
+			</div>
+		</div>
+	</form>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+var wait=60;  
+function time(o) {  
+        if (wait == 0) {  
+            o.removeAttribute("disabled");            
+            o.value="获取验证码";  
+            wait = 60;  
+        } else {  
+            o.setAttribute("disabled", true);  
+            o.value="重新发送(" + wait + ")";  
+            wait--;  
+            setTimeout(function() {  
+                time(o)  
+            },  
+            1000)  
+        }  
+    }     
+document.getElementById("btn").onclick=function(){
+	if($("#telephone").val()!="")
+	{
+	    time(this);
+    }
+ }  
+ $('#btn').click(function(){
+	var telephone = $("#telephone").val();
+	if(telephone == ""){
+	    
+	}else{
+		$.ajax({
+			url :"/yuedong-weixin/user/client/1/getVerifyCode?telephone="+telephone,  // 提交的页面   +"= HTTP/1.1"
+			method : "get", // 设置请求类型为"POST"，默认为"GET"  
+			//dataType : 'json',
+			contentType : "application/x-www-form-urlencoded;charset=UTF-8",
+			error : function(msg) { // 设置表单提交出错  
+				alert("执行出错：" + msg.status);
+			},
+			success : function(resp) {
+				if (resp.resultCode == "00") {
+					
+				} else if (resp.resultCode == "99") {
+					  alert(resp.data);
+				} else {
+					alert("未知结果：" + resp);
+				}
+			},
+			cache : false
+		});
+	}
+  }
+ 
+)       
+ $('#regist').click(function(){
+	var telephone = $("#telephone").val();  
+	var verifyCode = $("#verifyCode").val();
+	if(telephone == ""||verifyCode == ""||$("#pass1").val() == ""){
+		
+	}else if($("#pass1").val() != $("#pass2").val()){
+		alert("两次密码不一致");
+	}else{
+		$.ajax({
+				url :"/yuedong-weixin/user/client/1/loginByCode",
+				data:{'telephone':telephone,'verifyCode':verifyCode,'password':$("#pass1").val()},		
+				method : "post", // 设置请求类型为"POST"，默认为"GET"  
+				dataType : 'json',
+				contentType : "application/x-www-form-urlencoded;charset=UTF-8",
+				error : function(msg) { // 设置表单提交出错  
+					alert("执行出错：" + msg.status);
+				},
+				success : function(resp) {
+					if (resp.resultCode == "00") {
+						window.history.go(-2);
+					} else if (resp.resultCode == "01") {
+						  alert("验证错误或者参数异常");
+					} else {
+						  alert("系统异常");
+					}
+				},
+				cache : false
+			});
+	   }
+	
+  }
+ 
+)       
+</script>
+</body>
+</html>

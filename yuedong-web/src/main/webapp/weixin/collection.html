@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; chaRset=utf-8" />
+<meta name="author" content=" HouYanPing" /> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+	<title>课程列表</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" href="css/weui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/select.css">
+</head>
+<body>
+<div id="tab">
+	<div class="tabList center mt0">
+		<span class="fn18 yrllow" id="class">课程</span>
+		<span class="fn18" id="activc">活动</span>
+	</div>
+	<div class="tabCon">
+		<div id="cursor">
+			<div class="outbox">
+			<div class="innerbox">
+				<div class="fl leftimgbox">
+					<img src="img/class001.png" >
+				</div>
+				<div class="fl frtextbox">
+					<h3>跃动客跆拳道体验班</h3>
+					<span class="bianqian1">跆拳道</span>
+					<span class="bianqian2">西湖区</span>
+					<p>杭州市古墩路188号</p>
+					<p>
+						<span class="time">2016.3.4-2016.3.8</span>
+						<span class="money">¥300.00</span>
+					</p>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="outbox">
+			<div class="innerbox">
+				<div class="fl leftimgbox">
+					<img src="img/class001.png" >
+				</div>
+				<div class="fl frtextbox">
+					<h3>跃动客跆拳道体验班</h3>
+					<span class="bianqian1">跆拳道</span>
+					<span class="bianqian2">西湖区</span>
+					<p>杭州市古墩路188号</p>
+					<p>
+						<span class="time">2016.3.4-2016.3.8</span>
+						<span class="money">¥300.00</span>
+					</p>
+				</div>
+				<div class="clear"></div>
+			</div>
+		  </div>
+		</div>
+		<div id="active" style="display: none;">
+		  <div class="outbox">
+			<div class="innerbox">
+				<div class="fl leftimgbox">
+					<img src="img/class001.png" >
+				</div>
+				<div class="fl frtextbox">
+					<h3>跃动客跆拳道体验班</h3>
+					<span class="bianqian1">跆拳道</span>
+					<span class="bianqian2">西湖区</span>
+					<p>杭州市古墩路188号</p>
+					<p>
+						<span class="time">2016.3.4-2016.3.8</span>
+						<span class="money">¥300.00</span>
+					</p>
+				</div>
+				<div class="clear"></div>
+			</div>
+		  </div>	
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$('#class').click(function(){
+		$('#cursor').show();
+		$('#active').hide();
+		$(this).addClass('yrllow').siblings().removeClass('yrllow');
+	})
+	$('#activc').click(function(){
+		$('#cursor').hide();
+		$('#active').show();
+		$(this).addClass('yrllow').siblings().removeClass('yrllow');
+	})
+	$('div#tab').css('height',$(window).height());
+
+</script>
+</body>
+</html>
